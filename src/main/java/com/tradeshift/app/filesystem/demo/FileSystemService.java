@@ -20,22 +20,30 @@ public class FileSystemService {
         return list(root.listFiles());
     }
 
+    public boolean delete(String path){
+        File file = new File(root, path);
+        if (!file.exists() || file.isDirectory()){
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        return file.delete();
+    }
+
     public InputStream read(String path){
         File file = new File(root, path);
         if (!file.exists() || file.isDirectory()){
-            throw new WebApplicationException(Response.Status.NOT_FOUND); 
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         try {
             return new FileInputStream(file);
         } catch (FileNotFoundException ex) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND); 
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
     }
 
     public void create(String path, byte[] bytes) throws IOException {
         File file = new File(root, path);
         if (file.exists() && file.isDirectory()){
-            throw new WebApplicationException(Response.Status.CONFLICT); 
+            throw new WebApplicationException(Response.Status.CONFLICT);
         }
         File parent = file.getParentFile();
         if (!parent.exists()){

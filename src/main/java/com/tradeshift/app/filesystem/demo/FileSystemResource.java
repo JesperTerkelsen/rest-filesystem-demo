@@ -3,8 +3,7 @@ package com.tradeshift.app.filesystem.demo;
 
 import com.tradeshift.app.filesystem.demo.dto.FileListDTO;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -48,6 +47,12 @@ public class FileSystemResource {
     @Path("file/{path:.+}")
     public Response download(@PathParam("path") String path){
         return Response.ok(fsService.read(path), MediaType.APPLICATION_OCTET_STREAM).build();
+    }
+
+    @DELETE
+    @Path("file/{path:.+}")
+    public void delete(@PathParam("path") String path){
+        fsService.delete(path);
     }
 
 }
