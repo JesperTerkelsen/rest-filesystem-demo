@@ -5,9 +5,11 @@ import com.tradeshift.app.filesystem.demo.dto.FileListDTO;
 import java.io.IOException;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -45,7 +47,15 @@ public class FileSystemResource {
         fsService.rmdir(path);
     }
     // move
-    // rename file
+
+    @POST
+    @Path("file/{path:.+}")
+    public void renameFile(@PathParam("path") String path, @QueryParam("renameto") String fileName){
+        if (fileName == null || fileName.isEmpty()){
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
+        fsService.rename(path, fileName);
+    }
 
     @PUT
     @Path("file/{path:.+}")

@@ -65,6 +65,19 @@ public class FileSystemService {
         return rmdir(new File(root, path));
     }
 
+    public void rename(String path, String newFileName){
+        File file = new File(root, path);
+        if (!file.exists() || file.isDirectory()){
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        File parent = file.getParentFile();
+        File renamed = new File(parent, newFileName);
+        if (renamed.exists()){
+            throw new WebApplicationException(Response.Status.CONFLICT);
+        }
+        file.renameTo(renamed);
+    }
+
     public boolean rmdir(File file){
         if (!file.exists()){
             throw new WebApplicationException(Response.Status.NOT_FOUND);
