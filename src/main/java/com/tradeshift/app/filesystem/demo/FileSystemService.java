@@ -14,7 +14,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 public class FileSystemService {
-    private final File root = new File(System.getProperty("user.home"));
+    private final File root = new File(System.getProperty("user.home")+"/tmp");
 
     public FileListDTO list(){
         return list(root.listFiles());
