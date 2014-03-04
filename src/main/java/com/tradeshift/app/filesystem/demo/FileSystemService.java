@@ -134,6 +134,6 @@ public class FileSystemService {
     }
 
     private FileDTO convert(File file){
-        return new FileDTO(file.getName(), file.isDirectory(), file.length());
+        return new FileDTO(file.getName(), file.isDirectory(), file.length(), file.lastModified());
     }
 }

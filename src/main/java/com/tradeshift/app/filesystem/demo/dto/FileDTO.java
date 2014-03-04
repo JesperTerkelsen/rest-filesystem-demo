@@ -14,14 +14,17 @@ public class FileDTO {
     private boolean directory;
     @XmlElement(name = "Size")
     private long size;
+    @XmlElement(name = "Lastmodified")
+    private long lastmodified;
 
     public FileDTO() {
     }
 
-    public FileDTO(String name, boolean directory, long size) {
+    public FileDTO(String name, boolean directory, long size, long lastmodified) {
         this.name = name;
         this.directory = directory;
         this.size = size;
+        this.lastmodified = lastmodified;
     }
 
     public String getName() {
@@ -34,6 +37,10 @@ public class FileDTO {
 
     public long getSize() {
         return size;
+    }
+
+    public long getLastmodified() {
+        return lastmodified;
     }
 
 
