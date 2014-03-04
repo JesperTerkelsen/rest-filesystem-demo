@@ -3,13 +3,34 @@ package com.tradeshift.app.filesystem.demo;
 import com.tradeshift.app.filesystem.demo.dto.FileDTO;
 import com.tradeshift.app.filesystem.demo.dto.FileListDTO;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 public class FileSystemService {
     private final File root = new File(System.getProperty("user.home"));
 
     public FileListDTO list(){
         return list(root.listFiles());
+    }
+
+    public void create(String path, byte[] bytes) throws IOException {
+        File file = new File(root, path);
+        if (file.exists() && file.isDirectory()){
+            throw new WebApplicationException(Response.Status.CONFLICT); 
+        }
+        File parent = file.getParentFile();
+        if (!parent.exists()){
+            parent.mkdirs();
+        }
+        try (OutputStream out = new FileOutputStream(file, false)) {
+            out.write(bytes);
+            out.flush();
+        }
     }
 
     public FileListDTO list(String path){

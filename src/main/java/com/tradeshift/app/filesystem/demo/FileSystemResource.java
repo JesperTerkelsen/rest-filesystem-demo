@@ -2,6 +2,9 @@
 package com.tradeshift.app.filesystem.demo;
 
 import com.tradeshift.app.filesystem.demo.dto.FileListDTO;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -33,7 +36,11 @@ public class FileSystemResource {
     @PUT
     @Path("file/{path:.+}")
     public void upload(@PathParam("path") String path, byte[] data){
-        
+        try {
+            fsService.create(path, data);
+        } catch (IOException ex) {
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
