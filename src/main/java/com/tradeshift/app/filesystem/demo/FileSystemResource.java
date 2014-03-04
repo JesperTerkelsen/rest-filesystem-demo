@@ -10,6 +10,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("")
@@ -41,6 +42,12 @@ public class FileSystemResource {
         } catch (IOException ex) {
             throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GET
+    @Path("file/{path:.+}")
+    public Response download(@PathParam("path") String path){
+        return Response.ok(fsService.read(path), MediaType.APPLICATION_OCTET_STREAM).build();
     }
 
 }

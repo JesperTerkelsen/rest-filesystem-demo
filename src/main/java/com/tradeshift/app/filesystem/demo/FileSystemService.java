@@ -3,9 +3,11 @@ package com.tradeshift.app.filesystem.demo;
 import com.tradeshift.app.filesystem.demo.dto.FileDTO;
 import com.tradeshift.app.filesystem.demo.dto.FileListDTO;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import javax.ws.rs.WebApplicationException;
@@ -16,6 +18,18 @@ public class FileSystemService {
 
     public FileListDTO list(){
         return list(root.listFiles());
+    }
+
+    public InputStream read(String path){
+        File file = new File(root, path);
+        if (!file.exists() || file.isDirectory()){
+            throw new WebApplicationException(Response.Status.NOT_FOUND); 
+        }
+        try {
+            return new FileInputStream(file);
+        } catch (FileNotFoundException ex) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND); 
+        }
     }
 
     public void create(String path, byte[] bytes) throws IOException {
