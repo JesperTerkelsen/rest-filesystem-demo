@@ -3,6 +3,9 @@ package com.tradeshift.app.filesystem.demo;
 
 import com.tradeshift.app.filesystem.demo.dto.FileListDTO;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -68,7 +71,17 @@ public class FileSystemResource {
     @GET
     @Path("file/{path:.+}")
     public Response download(@PathParam("path") String path){
-        return Response.ok(fsService.read(path), MediaType.APPLICATION_OCTET_STREAM).build();
+        try {
+            InputStream in = fsService.read(path);
+            // On a mac you need the ~/.mime.types file, see http://bugs.java.com/bugdatabase/view_bug.do?bug_id=8008345 for details
+            String contentType = Files.probeContentType(FileSystems.getDefault().getPath(path));
+            if (contentType == null){
+                contentType =  MediaType.APPLICATION_OCTET_STREAM;
+            }
+            return Response.ok(in, contentType).build();
+        } catch (IOException ex) {
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DELETE
