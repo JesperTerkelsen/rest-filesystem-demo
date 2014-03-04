@@ -12,13 +12,16 @@ public class FileDTO {
     private String name;
     @XmlElement(name = "Directory")
     private boolean directory;
+    @XmlElement(name = "Size")
+    private long size;
 
     public FileDTO() {
     }
 
-    public FileDTO(String name, boolean directory) {
+    public FileDTO(String name, boolean directory, long size) {
         this.name = name;
         this.directory = directory;
+        this.size = size;
     }
 
     public String getName() {
@@ -27,6 +30,10 @@ public class FileDTO {
 
     public boolean isDirectory() {
         return directory;
+    }
+
+    public long getSize() {
+        return size;
     }
 
 
