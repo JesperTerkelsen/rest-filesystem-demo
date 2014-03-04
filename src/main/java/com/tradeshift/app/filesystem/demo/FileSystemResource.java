@@ -46,15 +46,13 @@ public class FileSystemResource {
     public void deleteDirectory(@PathParam("path") String path){
         fsService.rmdir(path);
     }
-    // move
 
     @POST
     @Path("file/{path:.+}")
-    public void renameFile(@PathParam("path") String path, @QueryParam("renameto") String fileName){
-        if (fileName == null || fileName.isEmpty()){
-            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-        }
-        fsService.rename(path, fileName);
+    public void modifyPath(@PathParam("path") String path,
+            @QueryParam("renameto") String fileName,
+            @QueryParam("moveto") String folder){
+        fsService.move(path, fileName, folder);
     }
 
     @PUT

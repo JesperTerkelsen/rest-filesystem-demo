@@ -65,13 +65,28 @@ public class FileSystemService {
         return rmdir(new File(root, path));
     }
 
-    public void rename(String path, String newFileName){
+    public void move(String path, String newFileName, String newFolder){
+        if ((newFileName == null || newFileName.isEmpty())
+                && (newFolder == null || newFolder.isEmpty())){
+            // You need at least one of those
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
         File file = new File(root, path);
         if (!file.exists() || file.isDirectory()){
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        File parent = file.getParentFile();
-        File renamed = new File(parent, newFileName);
+        // Extract default information
+        if (newFileName == null || newFileName.isEmpty()){
+            newFileName = file.getName();
+        }
+        File otherFolder = file.getParentFile();
+        if (newFolder != null && !newFolder.isEmpty()){
+            otherFolder = new File(root, newFolder);
+            if (!otherFolder.exists()){
+                mkdirs(otherFolder);
+            }
+        }
+        File renamed = new File(otherFolder, newFileName);
         if (renamed.exists()){
             throw new WebApplicationException(Response.Status.CONFLICT);
         }
