@@ -34,6 +34,20 @@ public class FileSystemResource {
     }
 
     @PUT
+    @Path("files/{path:.+}")
+    public void createDirectory(@PathParam("path") String path){
+        fsService.mkdirs(path);
+    }
+
+    @DELETE
+    @Path("files/{path:.+}")
+    public void deleteDirectory(@PathParam("path") String path){
+        fsService.rmdir(path);
+    }
+    // move
+    // rename file
+
+    @PUT
     @Path("file/{path:.+}")
     public void upload(@PathParam("path") String path, byte[] data){
         try {

@@ -20,6 +20,10 @@ public class FileSystemService {
         return list(root.listFiles());
     }
 
+    public FileListDTO list(String path){
+        return list(new File(root, path));
+    }
+
     public boolean delete(String path){
         File file = new File(root, path);
         if (!file.exists() || file.isDirectory()){
@@ -46,17 +50,40 @@ public class FileSystemService {
             throw new WebApplicationException(Response.Status.CONFLICT);
         }
         File parent = file.getParentFile();
-        if (!parent.exists()){
-            parent.mkdirs();
-        }
+        mkdirs(parent);
         try (OutputStream out = new FileOutputStream(file, false)) {
             out.write(bytes);
             out.flush();
         }
     }
 
-    public FileListDTO list(String path){
-        return list(new File(root, path));
+    public void mkdirs(String path){
+        mkdirs(new File(root, path));
+    }
+
+    public boolean rmdir(String path){
+        return rmdir(new File(root, path));
+    }
+
+    public boolean rmdir(File file){
+        if (!file.exists()){
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        if (!file.isDirectory()){
+            throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+        }
+        if (file.list().length == 0){
+            return file.delete();
+        }
+        else {
+            throw new WebApplicationException(Response.Status.CONFLICT);
+        }
+    }
+
+    public void mkdirs(File file){
+        if (!file.exists()){
+            file.mkdirs();
+        }
     }
 
     private FileListDTO list(File file){
